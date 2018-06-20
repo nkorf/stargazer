@@ -1,0 +1,1 @@
+This is a fork of stargazer (under development) intenting to provide support for kable like markdown output. This is useful when working with rmarkdown notebooks and the type="text" output is not fit for your needs.
