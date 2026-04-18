@@ -1,0 +1,10 @@
+---
+title: "Stargazer in Quarto"
+format: html
+---
+
+```{r}
+library(stargazer)
+fit <- lm(mpg ~ wt + hp, data = mtcars)
+stargazer(fit, type = "html")
+```

@@ -1,0 +1,5 @@
+.playwright-mcp/
+test_render/*_files/
+test_render/*.html
+test_render/*.pdf
+test_render/*.png

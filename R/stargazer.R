@@ -19,8 +19,56 @@ function(..., type = "latex", title="", style="default", summary=NULL, out=NULL,
          summary.logical=TRUE, summary.stat=NULL, nobs=TRUE, mean.sd=TRUE, min.max=TRUE, median=FALSE, 
          iqr=FALSE) {
   
-  save.warn.option <- getOption("warn") 
+  save.warn.option <- getOption("warn")
   options(warn=-1)
+
+  # Auto-render inside knitr/Quarto documents (e.g. .qmd, .Rmd) so users
+  # do not have to remember to set `results = "asis"` on every chunk.
+  # When knitr is executing a chunk, capture stargazer's cat() output and
+  # return it via knitr::asis_output() so HTML/LaTeX/Markdown tables render.
+  in.knitr <- isTRUE(getOption("knitr.in.progress"))
+  if (in.knitr && is.character(type) && length(type) == 1 &&
+      tolower(type) %in% c("html", "latex", "mmd")) {
+    captured <- utils::capture.output(
+      .stargazer.wrap(..., type=type, title=title, style=style, summary=summary, out=out, out.header=out.header,
+                         column.labels=column.labels, column.separate = column.separate,
+                         covariate.labels=covariate.labels, dep.var.caption = dep.var.caption,
+                         dep.var.labels=dep.var.labels, dep.var.labels.include=dep.var.labels.include,
+                         align=align, coef=coef, se=se, t=t, p=p, t.auto=t.auto, p.auto=p.auto,
+                         ci=ci, ci.custom=ci.custom, ci.level=ci.level, ci.separator = ci.separator,
+                         add.lines=add.lines, apply.coef=apply.coef, apply.se=apply.se, apply.t=apply.t,
+                         apply.p=apply.p, apply.ci=apply.ci, colnames=colnames,
+                         column.sep.width=column.sep.width, decimal.mark=decimal.mark, df=df,
+                         digit.separate=digit.separate, digit.separator=digit.separator,
+                         digits=digits, digits.extra=digits.extra,
+                         flip=flip,
+                         float=float, float.env=float.env,
+                         font.size=font.size, header=header,
+                         initial.zero=initial.zero,
+                         intercept.bottom=intercept.bottom, intercept.top=intercept.top,
+                         keep = keep, keep.stat = keep.stat,
+                         label = label,
+                         model.names=model.names, model.numbers=model.numbers,
+                         multicolumn = multicolumn,
+                         no.space=no.space, notes=notes, notes.align=notes.align,
+                         notes.append=notes.append, notes.label=notes.label, object.names=object.names,
+                         omit=omit, omit.labels=omit.labels, omit.stat=omit.stat, omit.summary.stat=omit.summary.stat,
+                         omit.table.layout=omit.table.layout,omit.yes.no=omit.yes.no,
+                         order=order, ord.intercepts=ord.intercepts, perl=perl,
+                         report=report, rownames=rownames, rq.se=rq.se, selection.equation=selection.equation,
+                         single.row=single.row, star.char=star.char,
+                         star.cutoffs=star.cutoffs, suppress.errors=suppress.errors,
+                         table.layout=table.layout,
+                         table.placement = table.placement, zero.component=zero.component,
+                         summary.logical = summary.logical,
+                         summary.stat = summary.stat,
+                         nobs=nobs, mean.sd=mean.sd,
+                         min.max=min.max, median=median, iqr=iqr, warn=save.warn.option)
+    )
+    options(warn=save.warn.option)
+    return(knitr::asis_output(paste(captured, collapse = "\n")))
+  }
+
   return(.stargazer.wrap(..., type=type, title=title, style=style, summary=summary, out=out, out.header=out.header,
                          column.labels=column.labels, column.separate = column.separate,
                          covariate.labels=covariate.labels, dep.var.caption = dep.var.caption,

@@ -1,0 +1,10 @@
+---
+title: "Stargazer in Quarto (PDF)"
+format: pdf
+---
+
+```{r}
+library(stargazer)
+fit <- lm(mpg ~ wt + hp, data = mtcars)
+stargazer(fit, type = "latex", header = FALSE, float = FALSE)
+```

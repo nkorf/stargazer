@@ -1,0 +1,25 @@
+---
+title: "Stargazer rendering issue"
+format: html
+---
+
+# Default chunk — HTML output is NOT rendered (issue)
+
+```{r}
+library(stargazer)
+fit <- lm(mpg ~ wt + hp, data = mtcars)
+stargazer(fit, type = "html")
+```
+
+# With results: asis — workaround
+
+```{r}
+#| results: asis
+stargazer(fit, type = "html")
+```
+
+# Text type — also affected without asis
+
+```{r}
+stargazer(fit, type = "text")
+```
